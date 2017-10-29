@@ -1,19 +1,19 @@
 var inquirer = require('inquirer')
 var game = require('./chooseWord.js')
 var word = require('./word.js')
-var chosen 
-var number 
-var guessWord 
-var chance 
-var guessed = []
-function hangman(){}
+
+
+function hangman(){
+
+}
 
 hangman.prototype.gameon = function(){
 	var newround = new game();
-	number = newround.number
-	chosen = newround.chosen
-	guessWord = new word(chosen)
-	chance = guessWord.length()
+	this.number = newround.number
+	this.chosen = newround.chosen
+	this.guessWord = new word(this.chosen)
+	this.chance = this.guessWord.length()
+	this.guessed = []
 	//console.log(chosen)
 	this.show()
 }
@@ -22,16 +22,16 @@ hangman.prototype.show = function show(){
 	//console.log (guessWord.letterArray().join(" "))
 	//console.log(chosen)
 	var that = this
-	if(number < chance){
+	if(this.number < that.chance){
 		// console.log(this)
 		// var that = this
-		var questions = this.question();
+		var questions = that.question();
 		inquirer.prompt(questions).then(function(answer){
 	//check if user inputed this before, so that people can not input the same correct letter to win
 			 
 			function checkBefore(){
-				for (var i = 0; i < guessed.length; i++) {
-					if(guessed[i] === answer.guess){
+				for (var i = 0; i < that.guessed.length; i++) {
+					if(that.guessed[i] === answer.guess){
 						return true
 					}
 				}
@@ -39,22 +39,22 @@ hangman.prototype.show = function show(){
 
 			if(checkBefore()){ 
 				console.log("you have typed this")
-				number++;
-				console.log(`You have ${chance - number} chances left`)
+				that.number++;
+				console.log(`You have ${that.chance - that.number} chances left`)
 				that.show()
 			}
 
 			else{
-				guessed.push(answer.guess)
+				that.guessed.push(answer.guess)
 
-				guessWord.checkLetter(answer.guess);
-				number ++;
+				that.guessWord.checkLetter(answer.guess);
+				this.number ++;
 				
-				if(guessWord.win != true){
-					console.log(`You have ${chance - number} chances left`)
+				if(that.guessWord.win != true){
+					console.log(`You have ${that.chance - that.number} chances left`)
 					that.show()
 				}else{
-					console.log(chosen)
+					console.log(that.chosen)
 					that.newgame()
 				}
 			}
@@ -72,19 +72,19 @@ hangman.prototype.question = function question() {
 		{	
 			name:'guess',
 			type:'input',
-			message: guessWord.letterArray().join(" ")
+			message: this.guessWord.letterArray().join(" ")
 		}
 		]
 		return questions
 }
 
 hangman.prototype.newgame = function newgame(){
-	var that = this
+	var that  = this;
 	var questions = [
 			{	
 			name:'newGame',
 			type:'confirm',
-			message: `${chosen.split("").join(" ")} \n Do you want a new Game?`,
+			message: `${this.chosen.split("").join(" ")} \n Do you want a new Game?`,
 			default: false		
 		}
 	]
@@ -98,6 +98,7 @@ hangman.prototype.newgame = function newgame(){
 	})
 }
 
+//module.exports = hangman
 var newGame = new hangman()
 newGame.gameon()
 //trial
