@@ -98,7 +98,7 @@ hangman.prototype.newgame = function newgame(){
 	})
 }
 
-//module.exports = hangman
-var newGame = new hangman()
-newGame.gameon()
+module.exports = hangman
+// var newGame = new hangman()
+// newGame.gameon()
 //trial
